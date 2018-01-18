@@ -120,14 +120,27 @@ function videoUrl(service, videoID, options) {
 
 function tokenizeVideo(md, options) {
   function tokenizeReturn(tokens, idx) {
+
     const videoID = md.utils.escapeHtml(tokens[idx].videoID);
+
     const service = md.utils.escapeHtml(tokens[idx].service).toLowerCase();
-    return videoID === '' ? '' :
-      '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item ' +
-      service + '-player" type="text/html" width="' + (options[service].width) +
-      '" height="' + (options[service].height) +
-      '" src="' + options.url(service, videoID, options) +
-      '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+
+
+    var optionString = '';
+    for (var i in options[service]) {
+      optionString += i + '=' + options[service][i] + '\n'
+    }
+
+    return videoID === '' ? '' : [
+      '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item',
+      service + '-player',
+      'type="text/html',
+      "src=" + options.url(service, videoID, options),
+      'frameborder="0"',
+      'webkitallowfullscreen mozallowfullscreen allowfullscreen',
+      optionString,
+      '></iframe></div>'
+    ].join(' ')
   }
 
   return tokenizeReturn;
